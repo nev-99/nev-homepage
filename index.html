@@ -1,151 +1,152 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
+
 <head>
-<title>fuck the people</title>
+    <title>The Loser's World</title>
+    <link rel="stylesheet" href="vhs.css">
+    <style>
+        .content {
+            padding: 40px 20px 60px;
+            font-family: Arial, Helvetica;
+        }
 
-<style>
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    background: black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+        .fire-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
 
-/* VHS枠（ここをスクロールさせる） */
-.vhs-frame {
-    aspect-ratio: 4 / 3;
-    width: 90vw;
-    max-height: 90vh;
-    overflow-y: auto; /* ← ここ重要 */
-    position: relative;
-    background: black;
-}
+        .fire-background {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
 
-/* 縦長ページ */
-.vhs-content {
-    height: 2000px; /* サイト全体の高さ */
-    position: relative;
+        .fire-gif {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+        }
 
-    background-image: url("385739.jpg");
-    background-repeat: no-repeat;
-    background-size: 100% 100%; /* ページ全体に強制ストレッチ */
-}
-
-/* 通常コンテンツ */
-.content {
-    text-align: center;
-    padding: 20px;
-    font-family: Arial, Helvetica;
-}
-
-/* fire container を最下部へ */
-.fire-container {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-}
-
-/* 背景画像（炎の後ろ） */
-.fire-background {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-/* 炎 */
-.fire-gif {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: auto;
-}
-
-/* テキスト */
-.fire-text {
-    position: absolute;
-    width: 100%;
-    text-align: center;
-    bottom: 70%;
-    font-size: 18px;
-    font-weight: bold;
-    color: red;
-}
-</style>
-
+        .fire-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            bottom: 70%;
+            font-size: 18px;
+            font-weight: bold;
+            color: red;
+        }
+    </style>
 </head>
 
 <body>
+    <div class="vhs-frame">
+        <div class="vhs-content" style="background-image:url('385739.jpg'); min-height:2000px;">
 
-<div class="vhs-frame">
+            <div class="content">
+                <br><br>
 
-<div class="vhs-content">
+                <div style="text-align: center;">
+                    <font size="5">
+                        <b>Welcome to The Loser's World!!</b>
+                    </font>
+                </div>
 
-<div class="content">
+                <br>
 
-<img src="logo.gif" width="300" height="80">
+                <table width="100%" border="2" cellpadding="10" cellspacing="0" bgcolor="#FFFFFF">
+                    <tr bgcolor="#CCCCCC">
+                        <td>
+                            <div>
+                                <b>The Underdog Code</b>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <br>
+                            <b>1. Trust no one.</b>
+                            <br>
+                            <b>2. The crowd won't stop talking.</b>
+                            <br>
+                            <b>3. So hit the books.</b>
+                            <br><br>
+                        </td>
+                    </tr>
+                </table>
 
-<br><br>
+                <br>
 
-<b>Welcome to The Loser's Club!!</b>
+                <table width="100%" border="2" cellpadding="8" cellspacing="0" bgcolor="#FFFFFF">
+                    <tr bgcolor="#CCCCCC">
+                        <td>
+                            <img src="paper_icon.png" width="15" height="15" alt="Paper Icon">
+                            <b>Posted Board</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            ・<a href="fools.html">Dear the Foolish</a>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
 
-<br><br>
+                <br>
 
-<table width="100%" border="2" cellpadding="8" cellspacing="0" bgcolor="#FFFFFF">
-<tr bgcolor="#CCCCCC">
-<td><b>The Underdog Code</b></td>
-</tr>
-<tr>
-<td>
-<ul>
-<li>Trust no one.</li>
-<li>The crowd won’t stop talking.</li>
-<li>So hit the books.</li>
-</ul>
-</td>
-</tr>
-</table>
+                <table width="100%" border="2" cellpadding="8" cellspacing="0" bgcolor="#FFFFFF">
+                    <tr bgcolor="#CCCCCC">
+                        <td>
+                            <img src="home_icon.png" width="15" height="15" alt="Home Icon">
+                            <b>Corpo Dobugawa</b>
+                            <small>~ Cheap Living by the Drain ~</small>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img src="post_icon.png" width="15" height="15" alt="Post Icon">
+                            <a>#101 nev</a>
+                            <!-- <a href="room_101.html">#101 nev</a> -->
+                        </td>
+                    </tr>
+                </table>
 
-<br><br>
+                <br>
 
-<table width="100%" border="2" cellpadding="8" cellspacing="0" bgcolor="#FFFFFF">
-<tr bgcolor="#CCCCCC">
-<td><b>Corpo Dobugawa</b><br>
-<small>~ Cheap Living by the Drain ~</small>
-</td>
-</tr>
-<tr>
-<td>
-<ul>
-<li><a href="room_101.html">nev's room</a></li>
-</ul>
-</td>
-</tr>
-</table>
+                <table width="100%" border="2" cellpadding="10" cellspacing="0" bgcolor="#FFFFFF">
+                    <tr bgcolor="#CCCCCC">
+                        <td>
+                            <div>
+                                <b>Links</b>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="http://fuckweb-3-0.duckdns.org/">FUCK WEB3.0</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
 
-<br><br><br><br><br><br><br><br><br><br>
+            <br><br>
 
-</div>
+            <div class="fire-container">
+                <img src="IMG_6013.png" class="fire-background" alt="Fire Background">
 
-<!-- 最下部 -->
-<div class="fire-container">
+                <div class="fire-text">
+                    2026 Released. Fuck the people.
+                </div>
 
-    <img src="IMG_6013.png" class="fire-background">
+                <img src="hellfire.gif" class="fire-gif" alt="Hellfire">
+            </div>
 
-    <div class="fire-text">
-        2026 Released. Fuck the people.
+        </div>
     </div>
-
-    <img src="hellfire.gif" class="fire-gif">
-
-</div>
-
-</div>
-</div>
-
 </body>
+
 </html>
