@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>fuck the people</title>
+
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* VHS枠（ここをスクロールさせる） */
+.vhs-frame {
+    aspect-ratio: 4 / 3;
+    width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto; /* ← ここ重要 */
+    position: relative;
+    background: black;
+}
+
+/* 縦長ページ */
+.vhs-content {
+    height: 2000px; /* サイト全体の高さ */
+    position: relative;
+
+    background-image: url("385739.jpg");
+    background-repeat: no-repeat;
+    background-size: 100% 100%; /* ページ全体に強制ストレッチ */
+}
+
+/* 通常コンテンツ */
+.content {
+    text-align: center;
+    padding: 20px;
+    font-family: Arial, Helvetica;
+}
+
+/* fire container を最下部へ */
+.fire-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+/* 背景画像（炎の後ろ） */
+.fire-background {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* 炎 */
+.fire-gif {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+}
+
+/* テキスト */
+.fire-text {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    bottom: 70%;
+    font-size: 18px;
+    font-weight: bold;
+    color: red;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="vhs-frame">
+
+<div class="vhs-content">
+
+<div class="content">
+
+<img src="logo.gif" width="300" height="80">
+
+<br><br>
+
+<b>Welcome to The Loser's Club!!</b>
+
+<br><br>
+
+<table width="100%" border="2" cellpadding="8" cellspacing="0" bgcolor="#FFFFFF">
+<tr bgcolor="#CCCCCC">
+<td><b>The Underdog Code</b></td>
+</tr>
+<tr>
+<td>
+<ul>
+<li>Trust no one.</li>
+<li>The crowd won’t stop talking.</li>
+<li>So hit the books.</li>
+</ul>
+</td>
+</tr>
+</table>
+
+<br><br>
+
+<table width="100%" border="2" cellpadding="8" cellspacing="0" bgcolor="#FFFFFF">
+<tr bgcolor="#CCCCCC">
+<td><b>Corpo Dobugawa</b><br>
+<small>~ Cheap Living by the Drain ~</small>
+</td>
+</tr>
+<tr>
+<td>
+<ul>
+<li><a href="room_101.html">nev's room</a></li>
+</ul>
+</td>
+</tr>
+</table>
+
+<br><br><br><br><br><br><br><br><br><br>
+
+</div>
+
+<!-- 最下部 -->
+<div class="fire-container">
+
+    <img src="IMG_6013.png" class="fire-background">
+
+    <div class="fire-text">
+        2026 Released. Fuck the people.
+    </div>
+
+    <img src="hellfire.gif" class="fire-gif">
+
+</div>
+
+</div>
+</div>
+
+</body>
+</html>
