@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
   <head>
-    <title>Dear the foolish</title>
+    <title>Monthly: Yanday Magazine</title>
     <link rel="icon" href="tree-0.ico" type="image/x-icon" />
     <link rel="stylesheet" href="vhs.css" />
 
@@ -32,15 +32,14 @@
       .article-content {
         padding: 20px;
         display: none;
+        text-align: center;
       }
 
-      .article-text {
-        line-height: 1.8;
-        font-size: 16px;
-      }
-
-      .article-text p {
-        margin-bottom: 1.2em;
+      .article-content img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto 20px;
       }
 
       button {
@@ -49,7 +48,7 @@
     </style>
 
     <script>
-      function toggleArticle(id, file) {
+      function toggleImages(id, imageFiles) {
         const container = document.getElementById(id);
 
         if (container.style.display === "block") {
@@ -58,53 +57,62 @@
           return;
         }
 
-        fetch(file)
-          .then(function (response) {
-            return response.text();
-          })
-          .then(function (data) {
-            container.innerHTML = data;
-            container.style.display = "block";
-          })
-          .catch(function (error) {
-            container.innerHTML = "Failed to load article.";
-            container.style.display = "block";
-          });
+        container.innerHTML = "";
+
+        imageFiles.forEach(function(file) {
+          const img = document.createElement("img");
+          img.src = file;
+          container.appendChild(img);
+        });
+
+        container.style.display = "block";
       }
+
+      // ページ読み込み時に先頭articleを開く
+      window.addEventListener("DOMContentLoaded", function () {
+        const firstArticle = document.querySelector(".article-container button");
+        if (firstArticle) {
+          firstArticle.click();
+        }
+      });
     </script>
   </head>
 
   <body>
     <div class="vhs-frame">
-      <div class="vhs-content" style="background: white">
+      <div class="vhs-content" style="background: rgb(222, 222, 222)">
         <div class="content">
           <br /><br />
-          <b>Listen, idiots</b>
+          <b>Monthly: Yanday Magazine</b>
           <br /><br />
+          <small>no set scheduleee</small>
+          <br><br>
 
-          <img src="IMG_6040.jpg" width="50%" />
-
-          <!-- Article 2 -->
           <div class="article-container">
             <div class="article-header">
-              <span>A note on the virgin-enthusiast problem</span>
-              <button onclick="toggleArticle('article2', 'journal_02.html')">
-                Open
-              </button>
-            </div>
-            <div id="article2" class="article-content"></div>
-          </div>
-
-          <!-- Article 1 -->
-          <div class="article-container">
-            <div class="article-header">
-              <span>An arrogant creator (laugh)</span>
-              <button onclick="toggleArticle('article1', 'journal_01.html')">
+              <span>Yanikki - Vol.01 (Latest)</span>
+              <button onclick="toggleImages('article1', [
+                'yanikki_vol1_01.jpg',
+                'yanikki_vol1_02.jpg'
+              ])">
                 Open
               </button>
             </div>
             <div id="article1" class="article-content"></div>
           </div>
+
+          <!-- <div class="article-container">
+            <div class="article-header">
+              <span>Yanikki - Vol.01</span>
+              <button onclick="toggleImages('article2', [
+                'yanikki_vol1_01.jpg',
+                'yanikki_vol1_02.jpg'
+              ])">
+                Open
+              </button>
+            </div>
+            <div id="article2" class="article-content"></div>
+          </div> -->
 
           <div class="bottom-contents">
             <br />
