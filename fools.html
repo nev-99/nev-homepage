@@ -55,6 +55,30 @@
         color: black;
       }
     </style>
+    <script>
+      function toggleArticle(id, file) {
+        const container = document.getElementById(id);
+
+        if (container.style.display === "block") {
+          container.style.display = "none";
+          container.innerHTML = "";
+          return;
+        }
+
+        fetch(file)
+          .then(function (response) {
+            return response.text();
+          })
+          .then(function (data) {
+            container.innerHTML = data;
+            container.style.display = "block";
+          })
+          .catch(function (error) {
+            container.innerHTML = "Failed to load article.";
+            container.style.display = "block";
+          });
+      }
+    </script>
   </head>
 
   <body>

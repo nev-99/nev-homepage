@@ -47,6 +47,31 @@
         cursor: pointer;
       }
     </style>
+    <script>
+      function toggleImages(id, imageFiles) {
+        const container = document.getElementById(id);
+        if (container.style.display === "block") {
+          container.style.display = "none";
+          container.innerHTML = "";
+          return;
+        }
+        container.innerHTML = "";
+        imageFiles.forEach(function (file) {
+          const img = document.createElement("img");
+          img.src = file;
+          container.appendChild(img);
+        });
+        container.style.display = "block";
+      }
+      window.addEventListener("DOMContentLoaded", function () {
+        const firstArticle = document.querySelector(
+          ".article-container button",
+        );
+        if (firstArticle) {
+          firstArticle.click();
+        }
+      });
+    </script>
   </head>
 
   <body>
