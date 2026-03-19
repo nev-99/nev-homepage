@@ -1,15 +1,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
   <head>
-    <title>Monthly: Yanday Magazine</title>
-    <link rel="icon" href="tree-0.ico" type="image/x-icon" />
+    <title>NEV's Republic | Comics</title>
+    <link rel="icon" href="end-cig.png" type="image/x-icon" />
     <link rel="stylesheet" href="terminal.css" />
-
     <style>
       .content {
         text-align: center;
         padding: 40px 20px 60px;
         font-family: Arial, Helvetica;
+        background: #fff;
       }
 
       .article-container {
@@ -46,62 +46,92 @@
         cursor: pointer;
       }
     </style>
-
-    <script>
-      function toggleImages(id, imageFiles) {
-        const container = document.getElementById(id);
-
-        if (container.style.display === "block") {
-          container.style.display = "none";
-          container.innerHTML = "";
-          return;
-        }
-
-        container.innerHTML = "";
-
-        imageFiles.forEach(function(file) {
-          const img = document.createElement("img");
-          img.src = file;
-          container.appendChild(img);
-        });
-
-        container.style.display = "block";
-      }
-
-      // ページ読み込み時に先頭articleを開く
-      window.addEventListener("DOMContentLoaded", function () {
-        const firstArticle = document.querySelector(".article-container button");
-        if (firstArticle) {
-          firstArticle.click();
-        }
-      });
-    </script>
   </head>
 
   <body>
-    <div class="vhs-frame">
-      <div class="vhs-content" style="background: rgb(222, 222, 222)">
-        <div class="content">
-          <br /><br />
-          <b>Monthly: Yanday Magazine</b>
-          <br /><br />
-          <small>no set scheduleee</small>
-          <br><br>
+    <div class="mobile-header">
+      =================================<br />
+      Nevux ver.0.9.3-alpha<br />
+      =================================
+    </div>
 
-          <div class="article-container">
-            <div class="article-header">
-              <span>Yanikki - Vol.01 (Latest)</span>
-              <button onclick="toggleImages('article1', [
-                'yanikki_vol1_01.jpg',
-                'yanikki_vol1_02.jpg'
-              ])">
-                Open
-              </button>
-            </div>
-            <div id="article1" class="article-content"></div>
+    <div class="layout">
+      <div class="sidebar">
+        <div>
+          ==================<br />
+          Nevux <br />
+          ver.0.9.3-alpha<br />
+          ==================<br />
+        </div>
+
+        <br /><br />
+
+        <div><span class="prompt">user@nev-republic:~$</span> ls</div>
+        <br />
+
+        <div>> <a href="index.html">Top page</a></div>
+        <div>> <a href="fools.html">Dear the Foolish</a></div>
+        <div>> <a href="comic.html">Yanday Magazine</a></div>
+        <div>
+          > Corpo Dobugawa<br />
+          <a href="room_101.html">　- #101 nev(About me page)</a>
+        </div>
+
+        <br />
+        <div><span class="prompt">user@nev-republic:~$</span> links</div>
+        <br />
+        <div>
+          >
+          <a href="http://fuckweb-3-0.duckdns.org/">fuckweb-3-0 (Outer BBS)</a>
+        </div>
+
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+
+        <div id="terminal-guide">
+          Type "help" in the terminal below to see available commands.
+        </div>
+
+        <div class="sidebar-footer">
+          <div style="text-align: center">
+            <small>2026 Released by nev</small><br />
+            <small>- fw3.0 -</small>
           </div>
+        </div>
+      </div>
 
-          <!-- <div class="article-container">
+      <div class="main-area">
+        <div class="main-inner">
+          <div class="vhs-frame">
+            <div class="vhs-content vhs-effect">
+              <div class="content">
+                <br /><br />
+                <b>Monthly: Yanday Magazine</b>
+                <br /><br />
+                <small>no set scheduleee</small>
+                <br /><br />
+
+                <div class="article-container">
+                  <div class="article-header">
+                    <span>Yanikki - Vol.01 (Latest)</span>
+                    <button
+                      onclick="
+                        toggleImages('article1', [
+                          'yanikki_vol1_01.jpg',
+                          'yanikki_vol1_02.jpg',
+                        ])
+                      "
+                    >
+                      Open
+                    </button>
+                  </div>
+                  <div id="article1" class="article-content"></div>
+                </div>
+
+                <!-- <div class="article-container">
             <div class="article-header">
               <span>Yanikki - Vol.01</span>
               <button onclick="toggleImages('article2', [
@@ -113,16 +143,33 @@
             </div>
             <div id="article2" class="article-content"></div>
           </div> -->
-
-          <div class="bottom-contents">
-            <br />
-            <a href="index.html">back</a>
-            <br /><br />
-            <font size="-2">2026 Released. Fuck the people.</font>
-            <br />
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="terminal-footer">
+      <div class="terminal-line">user@nev-republic:~</div>
+
+      <div class="input-line">
+        $
+        <input
+          type="text"
+          class="terminal-input"
+          id="cmd"
+          placeholder="type command..."
+        />
+      </div>
+    </div>
+
+    <div class="mobile-footer">
+      <span onclick="history.back()">[back]</span>
+      <span onclick="location.href = 'index.html'">[home]</span>
+      <span onclick="history.forward()">[next]</span>
+    </div>
+
+    <script src="terminal.js"></script>
   </body>
 </html>

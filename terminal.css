@@ -21,7 +21,7 @@ body {
   max-height: 100%;
   overflow-y: auto;
   position: relative;
-  background: cornflowerblue;
+  background: black;
   border: 6px solid #111;
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
 }

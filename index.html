@@ -6,6 +6,10 @@
     <link rel="stylesheet" href="terminal.css" />
 
     <style>
+      .content {
+        background-color: cornflowerblue;
+      }
+
       @media (max-width: 768px) {
         .banner-row {
           flex-direction: column;
@@ -60,22 +64,36 @@
         margin-top: 5px;
       }
 
-      .nev-button {
-        display: block;
-        width: 200px;
-        margin: 20px auto;
-        padding: 8px;
+      .retro-wrap {
         text-align: center;
-        background: black;
-        color: #33ff33;
-        border: 1px solid #33ff33;
-        text-decoration: none;
-        font-family: "Courier New", monospace;
+        width: 100%;
       }
 
-      .nev-button:hover {
-        background: #33ff33;
+      .retro-button {
+        display: block;
+        width: 80%;
+        margin: 10px auto;
+        padding: 16px 0;
+        font-size: 20px;
+        font-weight: bold;
+        text-decoration: none;
         color: black;
+        background: #c0c0c0;
+        border: 3px solid;
+        border-color: #ffffff #808080 #808080 #ffffff;
+        box-shadow: 2px 2px 0 #000;
+        transition: all 0.05s ease;
+        font-family: "MS PGothic", Arial, sans-serif;
+      }
+
+      .retro-button:hover {
+        background: #dcdcdc;
+      }
+
+      .retro-button:active {
+        border-color: #808080 #ffffff #ffffff #808080;
+        box-shadow: 0 0 0 #000;
+        transform: translate(2px, 2px);
       }
 
       .fire-container {
@@ -93,6 +111,7 @@
         bottom: 0;
         left: 0;
         width: 100%;
+        background-color: cornflowerblue;
       }
 
       .fire-gif {
@@ -225,9 +244,7 @@
                     <a href="comic.html" class="banner">
                       <img src="YandayMagazine.jpg" />
                     </a>
-                    <div class="banner-desc">
-                      shitty comics
-                    </div>
+                    <div class="banner-desc">shitty comics</div>
                   </div>
                 </div>
 
@@ -264,16 +281,29 @@
                     </td>
                   </tr>
                 </table>
-              </div>
 
-              <div style="text-align: center">
-                <a href="room_101.html" class="nev-button">
-                  Enter NEV's Room
+                <br />
+                <br />
+
+                <div style="text-align: center">
+                  <font size="5">
+                    <b> ↓ Sick of “normal”? C’mon, join ussssssss ↓ </b>
+                  </font>
+                </div>
+                <a href="https://discord.gg/QyPCNgbJ" class="retro-button">
+                  　> THE LOSER'S CLUB (Discord)
+                </a>
+                <br />
+                <div style="text-align: center">
+                  <font size="5">
+                    <b>About me</b>
+                  </font>
+                </div>
+
+                <a href="room_101.html" class="retro-button">
+                 　> Enter NEV's Room
                 </a>
               </div>
-
-              <br />
-              <br />
 
               <div class="fire-container">
                 <img src="IMG_6013.png" class="fire-spacer" />
