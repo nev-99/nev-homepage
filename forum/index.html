@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>地下鉄道＠NEV</title>
+
+    <style>
+      .container {
+        display: flex;
+        max-width: 1200px;
+        margin: auto;
+      }
+      .sidebar {
+        width: 30%;
+        padding: 10px;
+        border-right: 1px solid #ffffff;
+      }
+      .main {
+        width: 70%;
+        padding: 10px;
+      }
+      .content {
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      html,
+      body {
+        background: #2f3a66;
+        color: #ffffff;
+        font-family: "Courier New", monospace;
+        margin: 0;
+      }
+
+      a {
+        color: #cfd6ff;
+      }
+      a:hover {
+        color: #ffffff;
+      }
+
+      hr {
+        border: none;
+        border-top: 1px solid #ffffff;
+      }
+
+      .logo {
+        text-align: center;
+        font-size: 2em;
+        margin-bottom: 10px;
+      }
+
+      .rules {
+        list-style: none;
+        padding-left: 0;
+        font-size: 12px;
+        margin: 10px 0;
+      }
+
+      .board-switch {
+        text-align: center;
+        padding: 5px 0;
+        border-top: 1px solid #ffffff;
+        border-bottom: 1px solid #ffffff;
+        margin: 10px 0;
+      }
+
+      .reply {
+        border-top: 1px solid #ffffff;
+        padding: 8px 0;
+      }
+
+      .postername {
+        color: #aaffaa;
+        font-weight: bold;
+      }
+
+      input,
+      textarea {
+        background: #1e274a;
+        color: #ffffff;
+        border: 1px solid #ffffff;
+        font-family: inherit;
+        width: 100%;
+      }
+
+      button {
+        background: transparent;
+        color: #ffffff;
+        border: 1px solid #ffffff;
+        cursor: pointer;
+      }
+      button:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .sidebar h3 {
+        border-bottom: 1px solid #ffffff;
+      }
+      .sidebar ul {
+        list-style: none;
+        padding-left: 0;
+        font-size: 12px;
+      }
+
+      .sidebar-footer {
+        margin-top: 20px;
+        font-size: 12px;
+      }
+
+      .mobile-footer {
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          display: block;
+        }
+        .sidebar {
+          display: none;
+        }
+        .main {
+          width: 100%;
+          padding: 0;
+        }
+
+        .content {
+          padding: 10px;
+          padding-bottom: 140px;
+        }
+
+        .mobile-footer {
+          display: block;
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          background: #2f3a66;
+          border-top: 1px solid #ffffff;
+          padding: 10px;
+          font-size: 12px;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="sidebar">
+        <h3 id="site-title"></h3>
+
+        <ul>
+          <li>
+            <a href="#" onclick="switchBoard('vipper')" id="board-vip"></a>
+          </li>
+          <li><a href="#" onclick="switchBoard('tcc')" id="board-tcc"></a></li>
+        </ul>
+
+        <h3 id="links-title"></h3>
+        <ul>
+          <li><a href="#" id="link-archive"></a></li>
+          <li><a href="#" id="link-log"></a></li>
+          <li><a href="#" id="link-external"></a></li>
+        </ul>
+
+        <button onclick="toggleLang()" id="lang-btn"></button>
+
+        <div class="sidebar-footer">
+          <span id="footer-text"></span>
+        </div>
+      </div>
+
+      <div class="main">
+        <div class="content">
+          <div class="logo" id="logo"></div>
+
+          <ul class="rules" id="board-desc"></ul>
+
+          <hr />
+
+          <div class="board-switch">
+            [
+            <a href="#" onclick="switchBoard('vipper')" id="board-vip-2"></a> |
+            <a href="#" onclick="switchBoard('tcc')" id="board-tcc-2"></a> ]
+          </div>
+
+          <hr />
+
+          <form
+            onsubmit="
+              addPost();
+              return false;
+            "
+          >
+            <span id="label-name"></span><br />
+            <input type="text" id="name" /><br /><br />
+
+            <span id="label-comment"></span><br />
+            <textarea id="comment"></textarea><br /><br />
+
+            <button type="submit" id="btn-post"></button>
+          </form>
+
+          <hr />
+
+          <div id="posts"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-footer">
+      <div id="mobile-links"></div>
+
+      <button onclick="toggleLang()" id="lang-btn-mobile"></button>
+
+      <div id="mobile-footer-text"></div>
+    </div>
+
+    <script>
+      let currentBoard = "vipper";
+      let currentLang = "en";
+
+      const dict = {
+        en: {
+          title: "Underground Line",
+          boards: { vipper: "News4vip", tcc: "TCC" },
+          links: "Links",
+          archive: "Archive",
+          log: "Log",
+          external: "External",
+          name: "NAME",
+          comment: "COMMENT",
+          post: "POST",
+          footer: "Last Update: 2026.03.18 / Admin: nev",
+          lang: "JP",
+          desc: {
+            vipper: [
+              "Wake up, Commonwealth.",
+              "For those rejected by the normie world.",
+              "AGAINST CENSORSHIP",
+              "Guaranteeing freedom of speech",
+            ],
+            tcc: [
+              "Let's talk true crime.",
+              "Stories, theories, and the messed-up side of reality.",
+            ],
+          },
+        },
+        ja: {
+          title: "地下鉄道",
+          boards: { vipper: "ニュース速報VIP", tcc: "TCC" },
+          links: "リンク",
+          archive: "アーカイブ",
+          log: "ログ",
+          external: "外部",
+          name: "名前",
+          comment: "コメント",
+          post: "投稿",
+          footer: "最終更新: 2026.03.18 / 管理人: nev",
+          lang: "EN",
+          desc: {
+            vipper: [
+              "目を覚ませ、コモンウェルス。",
+              "ノーミーに弾かれた者たちへ。",
+              "検閲に抗え",
+              "言論の自由を保証する",
+            ],
+            tcc: [
+              "TrueCrimeについて語ろう。",
+              "事件、考察、そして現実の闇を。",
+            ],
+          },
+        },
+      };
+
+      function renderUI() {
+        const d = dict[currentLang];
+
+        document.getElementById("site-title").textContent = d.title;
+        document.getElementById("logo").textContent = d.title;
+
+        document.getElementById("board-vip").textContent = d.boards.vipper;
+        document.getElementById("board-tcc").textContent = d.boards.tcc;
+        document.getElementById("board-vip-2").textContent = d.boards.vipper;
+        document.getElementById("board-tcc-2").textContent = d.boards.tcc;
+
+        document.getElementById("links-title").textContent = d.links;
+        document.getElementById("link-archive").textContent = d.archive;
+        document.getElementById("link-log").textContent = d.log;
+        document.getElementById("link-external").textContent = d.external;
+
+        document.getElementById("label-name").textContent = d.name;
+        document.getElementById("label-comment").textContent = d.comment;
+        document.getElementById("btn-post").textContent = d.post;
+
+        document.getElementById("footer-text").textContent = d.footer;
+        document.getElementById("mobile-footer-text").textContent = d.footer;
+
+        document.getElementById("lang-btn").textContent = d.lang;
+        document.getElementById("lang-btn-mobile").textContent = d.lang;
+
+        renderDescription();
+      }
+
+      function toggleLang() {
+        currentLang = currentLang === "en" ? "ja" : "en";
+        renderUI();
+      }
+
+      function renderDescription() {
+        const ul = document.getElementById("board-desc");
+        ul.innerHTML = "";
+
+        dict[currentLang].desc[currentBoard].forEach((text) => {
+          const li = document.createElement("li");
+          li.textContent = text;
+          ul.appendChild(li);
+        });
+      }
+
+      function getKey() {
+        return "bbs_" + currentBoard;
+      }
+
+      function switchBoard(board) {
+        currentBoard = board;
+        document.getElementById("posts").innerHTML = "";
+        renderDescription();
+        loadPosts();
+      }
+
+      function loadPosts() {
+        const posts = JSON.parse(localStorage.getItem(getKey()) || "[]");
+        posts.forEach((p, i) => renderPost(p, i));
+      }
+
+      function addPost() {
+        const name = document.getElementById("name").value || "Anonymous";
+        const comment = document.getElementById("comment").value;
+
+        const post = { name, comment, time: new Date().toLocaleString() };
+
+        const posts = JSON.parse(localStorage.getItem(getKey()) || "[]");
+        posts.unshift(post);
+
+        localStorage.setItem(getKey(), JSON.stringify(posts));
+
+        document.getElementById("posts").innerHTML = "";
+        loadPosts();
+
+        document.getElementById("comment").value = "";
+      }
+
+      function renderPost(post, index) {
+        const div = document.createElement("div");
+        div.className = "reply";
+
+        div.innerHTML =
+          '<span class="postername">' +
+          escapeHtml(post.name) +
+          "</span> " +
+          "<span>" +
+          post.time +
+          "</span> " +
+          '<span class="reflink">No.' +
+          (index + 1) +
+          "</span><br>" +
+          "<blockquote>" +
+          escapeHtml(post.comment).replace(/\n/g, "<br>") +
+          "</blockquote>";
+
+        document.getElementById("posts").appendChild(div);
+      }
+
+      function escapeHtml(text) {
+        return text.replace(
+          /[&<>"']/g,
+          (m) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[m],
+        );
+      }
+
+      renderUI();
+      loadPosts();
+    </script>
+  </body>
+</html>
