@@ -1,224 +1,258 @@
 <?php
-$db = new PDO('sqlite:db.sqlite');
-$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+require_once 'config.php';
+require_once 'bbcode.php';
+session_start();
 
-$db->exec("
-CREATE TABLE IF NOT EXISTS posts (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  board TEXT,
-  name TEXT,
-  comment TEXT,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-)
-");
+// Style selector
+$style = $_COOKIE['style'] ?? DEFAULT_STYLE;
+if (isset($_GET['style']) && isset($STYLES[$_GET['style']])) {
+    $style = $_GET['style'];
+    setcookie('style', $style, time() + 60 * 60 * 24 * 365, '/');
+}
+$css = $STYLES[$style] ?? reset($STYLES);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $board = $_POST['board'];
-    $name = $_POST['name'] ?: 'Anonymous';
-    $comment = $_POST['comment'];
+// Get thread list
+$threads = array_diff(scandir(DATA_DIR), array('.', '..'));
+$threads = array_filter($threads, function ($f) {
+    return preg_match('/^thread_\d+\.dat$/', $f);
+});
 
-    $stmt = $db->prepare("INSERT INTO posts (board, name, comment) VALUES (?, ?, ?)");
-    $stmt->execute([$board, $name, $comment]);
+// BUMP
+usort($threads, function ($a, $b) {
+    return filemtime(DATA_DIR . '/' . $b) - filemtime(DATA_DIR . '/' . $a);
+});
 
-    header("Location: ?board=" . $board);
-    exit;
+$threads = array_slice($threads, 0, MAX_THREADS);
+
+function get_thread_title($file)
+{
+    $lines = file(DATA_DIR . '/' . $file);
+    if (isset($lines[0])) {
+        $parts = explode("\t", $lines[0]);
+        return htmlspecialchars($parts[2] ?? '');
+    }
+    return '';
+}
+function get_thread_count($file)
+{
+    $lines = file(DATA_DIR . '/' . $file);
+    return count($lines);
 }
 
-$currentBoard = $_GET['board'] ?? 'vipper';
-
-$stmt = $db->prepare("SELECT * FROM posts WHERE board=? ORDER BY id DESC");
-$stmt->execute([$currentBoard]);
-$posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$num1 = rand(1, 9);
+$num2 = rand(1, 9);
+$_SESSION['captcha_answer'] = $num1 + $num2;
 ?>
-
-<!doctype html>
-<html lang="ja">
+<!DOCTYPE html>
+<html lang="jp">
 
 <head>
     <meta charset="UTF-8">
-    <title>地下鉄道＠NEV</title>
-
-    <style>
-        body {
-            background: #2f3a66;
-            color: #fff;
-            font-family: "Courier New", monospace;
-            margin: 0;
-        }
-
-        .container {
-            display: flex;
-            max-width: 1200px;
-            margin: auto;
-        }
-
-        .sidebar {
-            width: 30%;
-            padding: 10px;
-            border-right: 1px solid #fff;
-        }
-
-        .main {
-            width: 70%;
-            padding: 10px;
-        }
-
-        .content {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        a {
-            color: #cfd6ff;
-        }
-
-        hr {
-            border: none;
-            border-top: 1px solid #fff;
-        }
-
-        .reply {
-            border-top: 1px solid #fff;
-            padding: 8px 0;
-        }
-
-        .postername {
-            color: #aaffaa;
-            font-weight: bold;
-        }
-
-        input,
-        textarea {
-            width: 100%;
-            background: #1e274a;
-            color: #fff;
-            border: 1px solid #fff;
-        }
-
-        button {
-            background: transparent;
-            color: #fff;
-            border: 1px solid #fff;
-        }
-
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .mobile-footer {
-            display: none;
-        }
-
-        @media (max-width:768px) {
-            .container {
-                display: block;
-            }
-
-            .sidebar {
-                display: none;
-            }
-
-            .main {
-                width: 100%;
-                padding: 0;
-            }
-
-            .content {
-                padding: 10px;
-                padding-bottom: 120px;
-            }
-
-            .mobile-footer {
-                display: block;
-                position: fixed;
-                bottom: 0;
-                width: 100%;
-                background: #2f3a66;
-                border-top: 1px solid #fff;
-                text-align: center;
-                padding: 10px;
-            }
-        }
-    </style>
-
+    <title><?= BOARD_TITLE ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=0.75">
+    <link rel="stylesheet" type="text/css" href="<?= htmlspecialchars($css) ?>">
 </head>
 
-<body>
+<body class="mainpage">
 
-    <div class="container">
-
-        <div class="sidebar">
-            <h3>Underground Line</h3>
-
-            <ul>
-                <li><a href="?board=vipper">News4vip</a></li>
-                <li><a href="?board=tcc">TCC</a></li>
-            </ul>
-
-            <h3>Links</h3>
-            <ul>
-                <li><a href="#">Archive</a></li>
-                <li><a href="#">Log</a></li>
-                <li><a href="#">External</a></li>
-            </ul>
-
-            <div>
-                Last Update: 2026.03.18<br>
-                Admin: nev
+    <div id="titlebox" class="outerbox">
+        <div class="innerbox">
+            <?php
+            if (preg_match('/\.(jpg|jpeg|png|gif|bmp|webp)$/i', BOARD_TITLE_IMG)) {
+                echo '<img src="' . htmlspecialchars(BOARD_TITLE_IMG) . '" alt="Board Title" style="max-width:100%;height:auto;">';
+            } else {
+                echo '<h1>' . htmlspecialchars(BOARD_TITLE_IMG) . '</h1>';
+            }
+            ?>
+            <div class="threadnavigation">
+                <a href="#menu" title="Jump to thread list">■</a>
+                <a href="#1" title="Jump to next thread">▼</a>
+            </div>
+            <div id="rules">
+                <p>
+                    我らは世間一般より拒まれし者どものためにここに在り, 検閲を退け言論の自由を断固として擁護する.<br>
+                    されど, 犯罪を誘発する一切の行為 ――児童ポルノ, 犯行予告 等―― これを厳禁とする.<br>
+                    秩序を乱す者は断乎として排除されねばならぬ, ここは自由の名において享受される場である.
+                </p>
             </div>
         </div>
+    </div>
 
-        <div class="main">
-            <div class="content">
+    <div id="stylebox" class="outerbox">
+        <div class="innerbox">
+            <strong><?= tr('board_look') ?>:</strong>
+            <?php foreach ($STYLES as $k => $v): ?>
+                <a href="?style=<?= $k ?>"><?= ucfirst($k) ?></a>
+            <?php endforeach; ?>
+        </div>
+    </div>
 
-                <div class="logo">Underground Line</div>
+    <a name="menu"></a>
+    <div id="threadbox" class="outerbox">
+        <div class="innerbox">
+            <div id="threadlist">
+                <?php $n = 1;
+                foreach ($threads as $thread):
+                    $id = basename($thread, '.dat');
+                    $title = get_thread_title($thread);
+                    $count = get_thread_count($thread);
+                ?>
+                    <span class="threadlink">
+                        <a href="thread.php?id=<?= urlencode($id) ?>" rel="nofollow"><?= $n ?>:</a>
+                        <a href="#<?= $n ?>"> <?= $title ?> (<?= $count ?>)</a>
+                    </span>
+                <?php $n++;
+                endforeach; ?>
+            </div>
+            <div id="threadlinks">
+                <a href="#newthread"><?= tr('new_thread') ?></a>
+                <a href="allthreads.php"><?= tr('all_threads') ?></a>
+            </div>
+        </div>
+    </div>
 
-                <hr>
+    <div id="posts">
+        <?php $n = 1;
+        foreach ($threads as $thread):
+            $id = basename($thread, '.dat');
+            $lines = file(DATA_DIR . '/' . $thread, FILE_IGNORE_NEW_LINES);
+            $title = get_thread_title($thread);
+            $count = count($lines);
 
-                <div class="board-switch">
-                    [ <a href="?board=vipper">News4vip</a> |
-                    <a href="?board=tcc">TCC</a> ]
+
+            $max_preview = 5;
+            $total = count($lines);
+            $start = max(0, $total - $max_preview);
+        ?>
+            <a name="<?= $n ?>"></a>
+            <div class="thread">
+                <h2><a href="thread.php?id=<?= urlencode($id) ?>" rel="nofollow"><?= $title ?> <small>(<?= $count ?>)</small></a></h2>
+                <div class="threadnavigation">
+                    <a href="#menu" title="Jump to thread list">■</a>
+                    <a href="#<?= $n - 1 ?>" title="Jump to previous thread">▲</a>
+                    <a href="#<?= $n + 1 ?>" title="Jump to next thread">▼</a>
                 </div>
 
-                <hr>
+                <div class="replies">
+                    <div class="allreplies">
 
-                <form method="POST">
-                    <input type="hidden" name="board" value="<?= htmlspecialchars($currentBoard) ?>">
+                        <?php if ($total > $max_preview): ?>
+                            <div class="replyabbrev">
+                                Posts omitted: <?= $total - $max_preview ?>
+                            </div>
+                        <?php endif; ?>
 
-                    NAME<br>
-                    <input type="text" name="name"><br><br>
+                        <?php foreach (array_slice($lines, $start) as $num => $line):
+                            $parts = explode("\t", $line);
+                            $name = htmlspecialchars($parts[1] ?? DEFAULT_USERNAME);
+                            $message = bbcode_to_html($parts[3] ?? '');
+                            $date = htmlspecialchars($parts[0] ?? '');
+                        ?>
+                            <div class="reply">
+                                <h3>
+                                    <span class="replynum">
+                                        <a title="Quote post number in reply" href="javascript:void(0);">
+                                            <?= $start + $num + 1 ?>
+                                        </a>
+                                    </span>
+                                    Name: <span class="postername"><?= $name ?></span> : <?= $date ?>
+                                </h3>
+                                <div class="replytext"><?= $message ?></div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
 
-                    COMMENT<br>
-                    <textarea name="comment"></textarea><br><br>
-
-                    <button type="submit">POST</button>
+                <form action="post.php" method="post">
+                    <input type="hidden" name="action" value="reply">
+                    <input type="hidden" name="id" value="<?= htmlspecialchars($id) ?>">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>Name:</td>
+                                <td><input type="text" name="name" size="19" maxlength="100"></td>
+                                <td><input type="submit" value="<?= tr('reply') ?>"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td colspan="2"><textarea name="message" cols="64" rows="5"></textarea></td>
+                            </tr>
+                            <tr>
+                                <td>Captcha:</td>
+                                <td colspan="2">
+                                    How much is <?= $num1 ?> + <?= $num2 ?>?
+                                    <input type="text" name="captcha" required>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </form>
 
-                <hr>
-
-                <?php foreach ($posts as $i => $post): ?>
-                    <div class="reply">
-                        <span class="postername"><?= htmlspecialchars($post['name']) ?></span>
-                        <span><?= $post['created_at'] ?></span>
-                        <span>No.<?= $post['id'] ?></span><br>
-                        <blockquote><?= nl2br(htmlspecialchars($post['comment'])) ?></blockquote>
-                    </div>
-                <?php endforeach; ?>
-
+                <div class="threadlinks">
+                    <a href="thread.php?id=<?= urlencode($id) ?>"><?= tr('entire_thread') ?></a>
+                    <a href="thread.php?id=<?= urlencode($id) ?>"><?= tr('last_50_posts') ?></a>
+                    <a href="#menu"><?= tr('thread_list') ?></a>
+                </div>
             </div>
+        <?php $n++;
+        endforeach; ?>
+    </div>
+
+    <a name="newthread"></a>
+    <div id="createbox" class="outerbox">
+        <div class="innerbox">
+            <h2><?= tr('new_thread') ?></h2>
+            <form action="post.php" method="post">
+                <input type="hidden" name="action" value="newthread">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Title:</td>
+                            <td><input type="text" name="title" size="46" maxlength="100"></td>
+                            <td><input type="submit" value="<?= tr('create_new_thread') ?>"></td>
+                        </tr>
+                        <tr>
+                            <td>Name:</td>
+                            <td colspan="2"><input type="text" name="name" size="19" maxlength="100"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td colspan="2"><textarea name="message" cols="64" rows="5"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td>Captcha:</td>
+                            <td colspan="2">
+                                How much is <?= $num1 ?> + <?= $num2 ?>?
+                                <input type="text" name="captcha" required>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
         </div>
     </div>
 
-    <div class="mobile-footer">
-        Links |
-        <a href="#">Archive</a> |
-        <a href="#">Log</a> |
-        <a href="#">External</a>
-
-        <br><br>
-        Last Update: 2026.03.18 / Admin: nev
+    <div id="footer">
+        <a href="/"></a>
+        &nbsp;-&nbsp;
+        &nbsp;-&nbsp; <a href="https://github.com/Strangeman2222/Licchannel">Licchannel 1.2</a>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const textareas = document.querySelectorAll('textarea[name="message"]');
+
+            textareas.forEach(function(textarea) {
+                textarea.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        const form = this.closest('form');
+                        if (form) form.submit();
+                    }
+                });
+            });
+        });
+    </script>
 
 </body>
 
